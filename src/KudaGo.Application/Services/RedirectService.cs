@@ -22,7 +22,7 @@ namespace KudaGo.Application.Services
 
             var handler = (ICommandHandler)_serviceProvider.GetService(type);
 
-            await handler.HandleAsync(message, cancellationToken);
+            //await handler.HandleAsync(message, cancellationToken);
         }
     }
 }

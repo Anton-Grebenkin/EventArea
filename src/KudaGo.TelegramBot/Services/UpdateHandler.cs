@@ -45,6 +45,8 @@ namespace KudaGo.TelegramBot.Services
 
         private async Task BotOnMessageReceived(Message message, CancellationToken cancellationToken)
         {
+            await _botClient.SendTextMessageAsync(message.Chat.Id, "ghsfsd");
+
             _logger.LogInformation("Receive message type: {MessageType}", message.Type);
             if (message.Text is not { } messageText)
                 return;
@@ -178,7 +180,7 @@ namespace KudaGo.TelegramBot.Services
 
             var handler = (ICallbackHandler)_serviceProvider.GetService(type);
                
-            await handler.HandleAsync(callbackQuery, callbackData, cancellationToken);
+            //await handler.HandleAsync(callbackQuery, callbackData, cancellationToken);
 
         }
 

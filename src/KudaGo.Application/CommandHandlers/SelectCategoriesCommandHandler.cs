@@ -9,12 +9,12 @@ using Telegram.Bot.Types;
 
 namespace KudaGo.Application.CommandHandlers
 {
-    [CommandName("/categories")]
-    public class SelectCategoriesCommandHandler : ICommandHandler
-    {
-        public async Task HandleAsync(Message message, CancellationToken cancellationToken)
-        {
-            var a = 1;
-        }
-    }
+    //[CommandName("/categories")]
+    //public class SelectCategoriesCommandHandler : ICommandHandler
+    //{
+    //    public async Task HandleAsync(Message message, CancellationToken cancellationToken)
+    //    {
+    //        var a = 1;
+    //    }
+    //}
 }

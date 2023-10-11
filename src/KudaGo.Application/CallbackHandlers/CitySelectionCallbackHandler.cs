@@ -11,41 +11,41 @@ using Telegram.Bot.Types;
 
 namespace KudaGo.Application.CallbackHandlers
 {
-    [CallbackType(CallbackType.CitySelection)]
-    public class CitySelectionCallbackHandler : ICallbackHandler
-    {
-        private readonly IUserRepository _userRepository;
-        private readonly ITelegramBotClient _botClient;
-        private readonly IRedirectService _redirectService;
-        private readonly IKudaGoApiClient _kudaGoApiClient;
-        public CitySelectionCallbackHandler(
-            IUserRepository userRepository, 
-            ITelegramBotClient botClient, 
-            IRedirectService redirectService,
-            IKudaGoApiClient kudaGoApiClient
-            ) 
-        {
-            _userRepository = userRepository;
-            _botClient = botClient;
-            _redirectService = redirectService;
-            _kudaGoApiClient = kudaGoApiClient;
-        }
-        public async Task HandleAsync(CallbackQuery callbackQuery, CallbackData callbackData, CancellationToken cancellationToken)
-        {
-            var user = await _userRepository.GetUserAsync(callbackQuery.Message.Chat.Id);
+    //[CallbackType(CallbackType.CitySelection)]
+    //public class CitySelectionCallbackHandler : ICallbackHandler
+    //{
+    //    private readonly IUserRepository _userRepository;
+    //    private readonly ITelegramBotClient _botClient;
+    //    private readonly IRedirectService _redirectService;
+    //    private readonly IKudaGoApiClient _kudaGoApiClient;
+    //    public CitySelectionCallbackHandler(
+    //        IUserRepository userRepository, 
+    //        ITelegramBotClient botClient, 
+    //        IRedirectService redirectService,
+    //        IKudaGoApiClient kudaGoApiClient
+    //        ) 
+    //    {
+    //        _userRepository = userRepository;
+    //        _botClient = botClient;
+    //        _redirectService = redirectService;
+    //        _kudaGoApiClient = kudaGoApiClient;
+    //    }
+    //    public async Task HandleAsync(CallbackQuery callbackQuery, CallbackData callbackData, CancellationToken cancellationToken)
+    //    {
+    //        var user = await _userRepository.GetUserAsync(callbackQuery.Message.Chat.Id);
 
-            user.City = callbackData.Data;
+    //        user.City = callbackData.Data;
 
-            var ci = await _kudaGoApiClient.GetCityAsync(callbackData.Data);
+    //        var ci = await _kudaGoApiClient.GetCityAsync(callbackData.Data);
 
-            await _userRepository.UpdateUserAsync(user);
+    //        await _userRepository.UpdateUserAsync(user);
 
-            await _botClient.DeleteMessageAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId);
+    //        await _botClient.DeleteMessageAsync(callbackQuery.Message.Chat.Id, callbackQuery.Message.MessageId);
 
-            if (callbackData.NextCommand != null)
-            {
-                await _redirectService.RedirectAsync(callbackData.NextCommand, callbackQuery.Message, cancellationToken);
-            }
-        }
-    }
+    //        if (callbackData.NextCommand != null)
+    //        {
+    //            await _redirectService.RedirectAsync(callbackData.NextCommand, callbackQuery.Message, cancellationToken);
+    //        }
+    //    }
+    //}
 }

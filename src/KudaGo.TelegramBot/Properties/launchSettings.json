@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "KudaGo.TelegramBot": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

@@ -10,7 +10,7 @@ using KudaGo.Application.Messages;
 namespace KudaGo.Application.CommandHandlers
 {
     [CommandName("/city")]
-    public class SelectCityCommandHandler : ICommandHandler
+    public class SelectCityCommandHandler /*: ICommandHandler*/
     {
         private readonly ITelegramBotClient _botClient;
         private readonly IKudaGoApiClient _kudaGoClient;

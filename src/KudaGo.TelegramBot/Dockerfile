@@ -5,9 +5,8 @@ ARG MONGO_HOST
 ARG MONGO_PORT
 ARG BOT_TOKEN
 
-RUN echo MONGO_HOST
-
 FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
+RUN echo $MONGO_HOST
 WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build

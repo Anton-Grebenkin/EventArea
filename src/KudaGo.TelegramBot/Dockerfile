@@ -15,12 +15,6 @@ COPY ["src/KudaGo.Application/KudaGo.Application.csproj", "src/KudaGo.Applicatio
 RUN dotnet restore "src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj"
 COPY . .
 WORKDIR "/src/src/KudaGo.TelegramBot"
-COPY  appsettings.json .
-RUN sed -i "s|${MONGO_USERNAME}|$MONGO_USERNAME|g" appsettings.json
-RUN sed -i "s|${MONGO_PASSWORD}|$MONGO_PASSWORD|g" appsettings.json
-RUN sed -i "s|${MONGO_HOST}|$MONGO_HOST|g" appsettings.json
-RUN sed -i "s|${MONGO_PORT}|$MONGO_PORT|g" appsettings.json
-RUN sed -i "s|${BOT_TOKEN}|$BOT_TOKEN|g" appsettings.json
 RUN dotnet build "KudaGo.TelegramBot.csproj" -c Release -o /app/build
 
 FROM build AS publish
@@ -29,5 +23,11 @@ RUN dotnet publish "KudaGo.TelegramBot.csproj" -c Release -o /app/publish /p:Use
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY  /app/publish/KudaGo.TelegramBot/appsettings.json .
+RUN sed -i "s|${MONGO_USERNAME}|$MONGO_USERNAME|g" appsettings.json
+RUN sed -i "s|${MONGO_PASSWORD}|$MONGO_PASSWORD|g" appsettings.json
+RUN sed -i "s|${MONGO_HOST}|$MONGO_HOST|g" appsettings.json
+RUN sed -i "s|${MONGO_PORT}|$MONGO_PORT|g" appsettings.json
+RUN sed -i "s|${BOT_TOKEN}|$BOT_TOKEN|g" appsettings.json
 ENTRYPOINT ["dotnet", "KudaGo.TelegramBot.dll"]
 

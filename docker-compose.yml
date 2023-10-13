@@ -20,4 +20,4 @@ services:
     ports:
       - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
-      - ./mongodb_data:/data/db
+      - /mongodb_data:/data/db

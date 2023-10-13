@@ -26,7 +26,6 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "KudaGo.TelegramBot.dll"]
 
-COPY /app/publish/appsettings.json .
 RUN sed -i "s|${MONGO_USERNAME}|$MONGO_USERNAME|g" appsettings.json
 RUN sed -i "s|${MONGO_PASSWORD}|$MONGO_PASSWORD|g" appsettings.json
 RUN sed -i "s|${MONGO_HOST}|$MONGO_HOST|g" appsettings.json

@@ -18,14 +18,12 @@ WORKDIR "/src/src/KudaGo.TelegramBot"
 RUN dotnet build "KudaGo.TelegramBot.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN  find . -name appsettings.json
 RUN dotnet publish "KudaGo.TelegramBot.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-RUN  find . -name appsettings.json
-COPY appsettings.json .
+COPY --from=publish /app/publish/appsettings.json .
 RUN sed -i "s|${MONGO_USERNAME}|$MONGO_USERNAME|g" appsettings.json
 RUN sed -i "s|${MONGO_PASSWORD}|$MONGO_PASSWORD|g" appsettings.json
 RUN sed -i "s|${MONGO_HOST}|$MONGO_HOST|g" appsettings.json

@@ -18,6 +18,7 @@ WORKDIR "/src/src/KudaGo.TelegramBot"
 RUN dotnet build "KudaGo.TelegramBot.csproj" -c Release -o /app/build
 
 FROM build AS publish
+RUN  find . -name appsettings.json
 RUN dotnet publish "KudaGo.TelegramBot.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final

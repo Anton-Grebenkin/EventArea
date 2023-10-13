@@ -26,7 +26,8 @@ ARG MONGO_HOST
 ARG MONGO_PORT
 ARG BOT_TOKEN
 
-COPY /app/publish/appsettings.json .
+WORKDIR "/src/src/KudaGo.TelegramBot"
+COPY appsettings.json .
 
 RUN sed -i "s|\${MONGO_USERNAME}|$MONGO_USERNAME|g" appsettings.json
 RUN sed -i "s|\${MONGO_PASSWORD}|$MONGO_PASSWORD|g" appsettings.json

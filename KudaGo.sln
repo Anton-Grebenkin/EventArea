@@ -11,6 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KudaGo.Application", "src\K
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{6AF4F1B4-2980-4F3B-8611-0A964A8503E9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5618C64B-8AC4-4602-92AF-9CE737683202}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +41,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{E720AD66-BB9E-440C-BE6F-8097F6956B32} = {BA80571B-9700-4B5A-8B01-E3C01823200B}
 		{CE3D94C0-154C-4C51-A4DA-1169036EE645} = {BA80571B-9700-4B5A-8B01-E3C01823200B}
+		{6AF4F1B4-2980-4F3B-8611-0A964A8503E9} = {5618C64B-8AC4-4602-92AF-9CE737683202}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {935961EB-F820-48DB-9061-629122AA0659}

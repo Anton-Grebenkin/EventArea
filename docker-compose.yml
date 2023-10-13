@@ -2,15 +2,22 @@ version: '3.4'
 
 services:
   kudago.telegrambot:
-    image: grebenkinanton/kudagotelegrambot
+    image: grebenkinanton/kudagotelegrambot:latest
     restart: always
-    build:
-      context: .
-      dockerfile: src/KudaGo.TelegramBot/Dockerfile
+    env_file:
+      - .env
+    environment:
+      - MONGO_USERNAME=${MONGO_USERNAME}
+      - MONGO_PASSWORD=${MONGO_PASSWORD} 
+      - MONGO_HOST=${MONGO_HOST}
+      - MONGO_PORT=${MONGO_PORT}
+      - BOT_TOKEN=${BOT_TOKEN}
   mongodb:
     image: mongo:latest
     restart: always
+    env_file:
+      - .env
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
       - ./mongodb_data:/data/db

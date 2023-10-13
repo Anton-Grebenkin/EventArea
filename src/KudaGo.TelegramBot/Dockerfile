@@ -19,3 +19,17 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "KudaGo.TelegramBot.dll"]
+
+ARG MONGO_USERNAME
+ARG MONGO_PASSWORD
+ARG MONGO_HOST
+ARG MONGO_PORT
+ARG BOT_TOKEN
+
+COPY appsettings.json .
+
+RUN sed -i "s|\${MONGO_USERNAME}|$MONGO_USERNAME|g" appsettings.json
+RUN sed -i "s|\${MONGO_PASSWORD}|$MONGO_PASSWORD|g" appsettings.json
+RUN sed -i "s|\${MONGO_HOST}|$MONGO_HOST|g" appsettings.json
+RUN sed -i "s|\${MONGO_PORT}|$MONGO_PORT|g" appsettings.json
+RUN sed -i "s|\${BOT_TOKEN}|$BOT_TOKEN|g" appsettings.json

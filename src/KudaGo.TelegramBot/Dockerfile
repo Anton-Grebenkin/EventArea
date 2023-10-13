@@ -24,7 +24,7 @@ ARG BOT_TOKEN
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY /app/publish/appsettings.json .
+COPY /app/appsettings.json .
 RUN sed -i "s|${MONGO_USERNAME}|$MONGO_USERNAME|g" appsettings.json
 RUN sed -i "s|${MONGO_PASSWORD}|$MONGO_PASSWORD|g" appsettings.json
 RUN sed -i "s|${MONGO_HOST}|$MONGO_HOST|g" appsettings.json

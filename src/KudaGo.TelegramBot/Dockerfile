@@ -12,7 +12,7 @@ FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj", "src/KudaGo.TelegramBot/"]
 COPY ["src/KudaGo.Application/KudaGo.Application.csproj", "src/KudaGo.Application/"]
-COPY appsettings.json .
+COPY KudaGo.TelegramBot/appsettings.json .
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_USERNAME/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PASSWORD/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_HOST/g' appsettings.json

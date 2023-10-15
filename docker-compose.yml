@@ -12,15 +12,15 @@ services:
       - MONGO_HOST=${MONGO_HOST}
       - MONGO_PORT=${MONGO_PORT}
       - BOT_TOKEN=${BOT_TOKEN}
-    #build:
-    #  context: .
-    #  dockerfile: srKudaGo.TelegramBot/Dockerfile
-    #  args:
-    #   MONGO_USERNAME: ${MONGO_USERNAME}
-    #   MONGO_PASSWORD: 123 
-    #   MONGO_HOST: ${MONGO_HOST}
-    #   MONGO_PORT: ${MONGO_PORT}
-    #   BOT_TOKEN: ${BOT_TOKEN}
+    build:
+      context: .
+      dockerfile: src/KudaGo.TelegramBot/Dockerfile
+      args:
+       MONGO_USERNAME: ${MONGO_USERNAME}
+       MONGO_PASSWORD: 123 
+       MONGO_HOST: ${MONGO_HOST}
+       MONGO_PORT: ${MONGO_PORT}
+       BOT_TOKEN: ${BOT_TOKEN}
   mongodb:
     image: mongo:latest
     restart: always

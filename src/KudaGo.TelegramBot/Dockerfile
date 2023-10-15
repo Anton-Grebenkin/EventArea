@@ -16,6 +16,7 @@ COPY src/KudaGo.TelegramBot/appsettings.json .
 RUN dotnet restore "src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj"
 COPY . .
 WORKDIR "/src/src/KudaGo.TelegramBot"
+RUN echo "ARG_NAME: $MONGO_PASSWORD"
 RUN sed -i 's/${MONGO_USERNAME}/anton/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PASSWORD/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_HOST/g' appsettings.json

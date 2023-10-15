@@ -13,11 +13,11 @@ WORKDIR /src
 COPY ["src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj", "src/KudaGo.TelegramBot/"]
 COPY ["src/KudaGo.Application/KudaGo.Application.csproj", "src/KudaGo.Application/"]
 COPY ["src/KudaGo.TelegramBot/appsettings.json", "src/KudaGo.TelegramBot/"]
-RUN sed -i 's/${MONGO_USERNAME}/${MONGO_USERNAME}/g' "src/KudaGo.TelegramBot/appsettings.json"
-RUN sed -i 's/${MONGO_USERNAME}/${MONGO_PASSWORD}/g' "src/KudaGo.TelegramBot/appsettings.json"
-RUN sed -i 's/${MONGO_USERNAME}/${MONGO_HOST}/g' "src/KudaGo.TelegramBot/appsettings.json"
-RUN sed -i 's/${MONGO_USERNAME}/${MONGO_PORT}/g' "src/KudaGo.TelegramBot/appsettings.json"
-RUN sed -i 's/${MONGO_USERNAME}/${BOT_TOKEN}/g' "src/KudaGo.TelegramBot/appsettings.json"
+RUN sed -i 's/${MONGO_USERNAME}/$MONGO_USERNAME/g' "src/KudaGo.TelegramBot/appsettings.json"
+RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PASSWORD/g' "src/KudaGo.TelegramBot/appsettings.json"
+RUN sed -i 's/${MONGO_USERNAME}/$MONGO_HOST/g' "src/KudaGo.TelegramBot/appsettings.json"
+RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PORT/g' "src/KudaGo.TelegramBot/appsettings.json"
+RUN sed -i 's/${MONGO_USERNAME}/$BOT_TOKEN/g' "src/KudaGo.TelegramBot/appsettings.json"
 RUN dotnet restore "src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj"
 COPY . .
 WORKDIR "/src/src/KudaGo.TelegramBot"

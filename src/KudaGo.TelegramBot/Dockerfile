@@ -16,10 +16,10 @@ ARG MONGO_HOST
 ARG MONGO_PORT
 ARG BOT_TOKEN
 RUN sed -i 's/${MONGO_USERNAME}/anton/g' appsettings.json
-RUN sed -i 's/${MONGO_USERNAME}/0000/g' appsettings.json
-RUN sed -i 's/${MONGO_USERNAME}/$MONGO_HOST/g' appsettings.json
-RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PORT/g' appsettings.json
-RUN sed -i 's/${MONGO_USERNAME}/$BOT_TOKEN/g' appsettings.json
+RUN sed -i 's/${MONGO_PASSWORD}/0000/g' appsettings.json
+RUN sed -i 's/${MONGO_HOST}/$MONGO_HOST/g' appsettings.json
+RUN sed -i 's/${MONGO_PORT}/$MONGO_PORT/g' appsettings.json
+RUN sed -i 's/${BOT_TOKEN}/$BOT_TOKEN/g' appsettings.json
 RUN dotnet build "KudaGo.TelegramBot.csproj" -c Release -o /app/build
 
 FROM build AS publish

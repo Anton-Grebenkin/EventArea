@@ -13,14 +13,14 @@ WORKDIR /src
 COPY ["src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj", "src/KudaGo.TelegramBot/"]
 COPY ["src/KudaGo.Application/KudaGo.Application.csproj", "src/KudaGo.Application/"]
 COPY src/KudaGo.TelegramBot/appsettings.json .
+RUN dotnet restore "src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj"
+COPY . .
+WORKDIR "/src/src/KudaGo.TelegramBot"
 RUN sed -i 's/${MONGO_USERNAME}/anton/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PASSWORD/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_HOST/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PORT/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$BOT_TOKEN/g' appsettings.json
-RUN dotnet restore "src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj"
-COPY . .
-WORKDIR "/src/src/KudaGo.TelegramBot"
 RUN dotnet build "KudaGo.TelegramBot.csproj" -c Release -o /app/build
 
 FROM build AS publish

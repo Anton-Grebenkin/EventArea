@@ -1,10 +1,4 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-ARG MONGO_USERNAME
-ARG MONGO_PASSWORD
-ARG MONGO_HOST
-ARG MONGO_PORT
-ARG BOT_TOKEN
-
 FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
 WORKDIR /app
 
@@ -16,7 +10,11 @@ COPY src/KudaGo.TelegramBot/appsettings.json .
 RUN dotnet restore "src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj"
 COPY . .
 WORKDIR "/src/src/KudaGo.TelegramBot"
-RUN echo "ARG_NAME: $MONGO_PASSWORD"
+ARG MONGO_USERNAME
+ARG MONGO_PASSWORD
+ARG MONGO_HOST
+ARG MONGO_PORT
+ARG BOT_TOKEN
 RUN sed -i 's/${MONGO_USERNAME}/anton/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PASSWORD/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_HOST/g' appsettings.json

@@ -4,7 +4,6 @@ ARG MONGO_PASSWORD
 ARG MONGO_HOST
 ARG MONGO_PORT
 ARG BOT_TOKEN
-ENV MONGO_HOST_ENV=$MONGO_HOST
 
 
 FROM mcr.microsoft.com/dotnet/runtime:6.0 AS base
@@ -18,6 +17,7 @@ COPY src/KudaGo.TelegramBot/appsettings.json .
 RUN dotnet restore "src/KudaGo.TelegramBot/KudaGo.TelegramBot.csproj"
 COPY . .
 WORKDIR "/src/src/KudaGo.TelegramBot"
+ENV MONGO_HOST_ENV=$MONGO_HOST
 RUN sed -i 's/${MONGO_USERNAME}/anton/g' appsettings.json
 RUN sed -i 's/${MONGO_PASSWORD}/0000/g' appsettings.json
 RUN sed -i 's/${MONGO_HOST}/$MONGO_HOST_ENV/g' appsettings.json

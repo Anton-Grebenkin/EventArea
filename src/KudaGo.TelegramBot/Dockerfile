@@ -16,7 +16,7 @@ ARG MONGO_HOST
 ARG MONGO_PORT
 ARG BOT_TOKEN
 RUN sed -i 's/${MONGO_USERNAME}/anton/g' appsettings.json
-RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PASSWORD/g' appsettings.json
+RUN sed -i 's/${MONGO_USERNAME}/0000/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_HOST/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$MONGO_PORT/g' appsettings.json
 RUN sed -i 's/${MONGO_USERNAME}/$BOT_TOKEN/g' appsettings.json

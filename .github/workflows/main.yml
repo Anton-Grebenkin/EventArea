@@ -39,7 +39,7 @@ jobs:
       - name: Copy docker-compose.yml to remote
         uses: garygrossgarten/github-action-scp@release
         with:
-          local: src/docker-compose.yml
+          local: docker-compose.yml
           remote: kudago/docker-compose.yml
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}

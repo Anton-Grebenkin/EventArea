@@ -13,10 +13,15 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
-
-      - uses: danielr1996/envsubst-action@1.0.0
+        
+      - name: Fill out appsettings.json
+        uses: danielr1996/envsubst-action@1.0.0
         env:
             BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+            MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+            MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+            MONGO_HOST: ${{ secrets.MONGO_HOST }}
+            MONGO_PORT: ${{ secrets.MONGO_PORT }}
         with:
             input: src/KudaGo.TelegramBot/appsettings.template.json
             output: src/KudaGo.TelegramBot/appsettings.json

@@ -43,7 +43,7 @@ jobs:
           remote: kudago/docker-compose.yml
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          password: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          privateKey: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1

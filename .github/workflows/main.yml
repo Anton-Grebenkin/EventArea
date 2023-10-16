@@ -16,7 +16,7 @@ jobs:
 
       - uses: danielr1996/envsubst-action@1.0.0
         env:
-            BOT_TOKEN: ${{ secrets.BOT_TOKEN} }
+            BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         with:
             input: src/KudaGo.TelegramBot/appsettings.template.json
             output: src/KudaGo.TelegramBot/appsettings.json

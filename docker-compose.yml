@@ -4,23 +4,6 @@ services:
   kudago.telegrambot:
     image: grebenkinanton/kudagotelegrambot:latest
     restart: always
-    env_file:
-      - .env
-    environment:
-      - MONGO_USERNAME=${MONGO_USERNAME}
-      - MONGO_PASSWORD=${MONGO_PASSWORD} 
-      - MONGO_HOST=${MONGO_HOST}
-      - MONGO_PORT=${MONGO_PORT}
-      - BOT_TOKEN=${BOT_TOKEN}
-    build:
-      context: .
-      dockerfile: src/KudaGo.TelegramBot/Dockerfile
-      args:
-       MONGO_USERNAME: ${MONGO_USERNAME}
-       MONGO_PASSWORD: 123 
-       MONGO_HOST: ${MONGO_HOST}
-       MONGO_PORT: ${MONGO_PORT}
-       BOT_TOKEN: ${BOT_TOKEN}
   mongodb:
     image: mongo:latest
     restart: always

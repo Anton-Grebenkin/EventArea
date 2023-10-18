@@ -399,3 +399,4 @@ FodyWeavers.xsd
 /.env
 mongodb_data
 /.env
+/docker-compose.yml

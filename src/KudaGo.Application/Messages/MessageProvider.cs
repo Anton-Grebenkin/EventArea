@@ -42,8 +42,6 @@ namespace KudaGo.Application.Messages
 
         public async Task<MessageData> WelcomeMessageAsync()
         {
-            await _messageTemplateRepository.GetMessageTemplateAsync(MessageTemplateType.WelcomeMessage);
-
             var massegeTemplate = await _messageTemplateRepository.GetMessageTemplateAsync(MessageTemplateType.WelcomeMessage);
 
             return new MessageData(massegeTemplate.Text);

@@ -1,17 +1,17 @@
 db = db.getSiblingDB('kudago');
 
-// Создаем коллекцию messages
+// РЎРѕР·РґР°РµРј РєРѕР»Р»РµРєС†РёСЋ messages
 db.createCollection('messages');
 
-// Заполняем коллекцию messages
+// Р—Р°РїРѕР»РЅСЏРµРј РєРѕР»Р»РµРєС†РёСЋ messages
 db.messages.insertMany([
     {
-        text: 'Приветсвие',
-        messageTemplateType: 0
+        Text: 'РџСЂРёРІРµС‚СЃРІРёРµ',
+        MessageTemplateType: 0
     },
     {
-        text: 'Выберите город',
-        messageTemplateType: 1
+        Text: 'Р’С‹Р±РµСЂРёС‚Рµ РіРѕСЂРѕРґ',
+        MessageTemplateType: 1
     }
 ]);
 

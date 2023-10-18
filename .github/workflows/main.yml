@@ -44,6 +44,15 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           privateKey: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          
+      - name: Copy init-mongo.js to remote
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: init-mongo.js
+          remote: kudago/init-mongo.js
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          privateKey: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1

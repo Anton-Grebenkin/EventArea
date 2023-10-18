@@ -26,6 +26,34 @@ jobs:
             input: src/KudaGo.TelegramBot/appsettings.template.json
             output: src/KudaGo.TelegramBot/appsettings.json
 
+      - name: Fill out docker-compose.yml
+        uses: danielr1996/envsubst-action@1.0.0
+        env:
+            MONGO_USERNAME: ${{ secrets.MONGO_USERNAME }}
+            MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+            MONGO_PORT: ${{ secrets.MONGO_PORT }}
+        with:
+            input: docker-compose.template.yml
+            output: docker-compose.yml
+
+      - name: Copy docker-compose.yml to remote
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: docker-compose.yml
+          remote: kudago/docker-compose.yml
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          privateKey: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+          
+      - name: Copy init-mongo.js to remote
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: init-mongo.js
+          remote: kudago/init-mongo.js
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          privateKey: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 

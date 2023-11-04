@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot.Types;
+﻿
+using KudaGo.Application.Messages;
 
 namespace KudaGo.Application.Abstractions
 {
     public interface IRedirectService
     {
-        Task RedirectAsync(string commandName, Message message, CancellationToken cancellationToken);
+        Task RedirectAsync(string commandName, MessageContext messageContext, CancellationToken cancellationToken);
     }
 }

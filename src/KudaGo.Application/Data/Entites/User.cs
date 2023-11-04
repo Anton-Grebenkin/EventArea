@@ -8,7 +8,11 @@ namespace KudaGo.Application.Data.Entites
         public long Id { get; set; }
         public string City { get; set; }
         public string UserName { get; set; }
-        public IEnumerable<string> RequiredCommands { get; set; }
-        public IEnumerable<string> PreferredEventCategories { get; set; }
+        public ICollection<string> PreferredEventCategories { get; set; }
+
+        public User() 
+        {
+            PreferredEventCategories = new List<string>();
+        }
     }
 }

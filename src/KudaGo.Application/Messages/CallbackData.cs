@@ -4,8 +4,9 @@ namespace KudaGo.Application.Messages
 {
     public class CallbackData
     {
+        [JsonProperty("t")]
         public CallbackType CallbackType  { get; set; }
-        public string? NextCommand { get; set; }
+        [JsonProperty("d")]
         public string Data { get; set; }
 
         public string ToJsonString()
@@ -22,5 +23,7 @@ namespace KudaGo.Application.Messages
     public enum CallbackType
     {
         CitySelection = 0,
+        ChangeCity = 1,
+        SelectCategories = 2
     } 
 }

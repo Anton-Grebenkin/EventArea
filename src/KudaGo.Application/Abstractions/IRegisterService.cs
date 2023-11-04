@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace KudaGo.Application.Abstractions
 {
-    public interface IRegisterService<Ttype, Tkey>
+    public interface IRegisterService<Tkey, Ttype>
     {
         public IDictionary<Tkey, Type> Tpes { get; }
     }

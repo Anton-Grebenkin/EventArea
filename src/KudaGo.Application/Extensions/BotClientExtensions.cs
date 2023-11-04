@@ -25,6 +25,16 @@ namespace KudaGo.Application.Extensions
                cancellationToken: cancellationToken);
         }
 
+        public static async Task EditMessageAsync(this ITelegramBotClient telegramBotClient, ChatId chatId, int messageId, MessageData messageData, CancellationToken cancellationToken)
+        {  
+            await telegramBotClient.EditMessageTextAsync(
+                chatId,
+                messageId,
+                messageData.Text,
+                replyMarkup: (InlineKeyboardMarkup?)messageData.ReplyMarkup,
+                cancellationToken: cancellationToken);
+        }
+
 
     }
 }

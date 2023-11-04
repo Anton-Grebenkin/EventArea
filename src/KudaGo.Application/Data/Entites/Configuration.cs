@@ -1,9 +1,12 @@
 ﻿
 
+using MongoDB.Bson;
+
 namespace KudaGo.Application.Data.Entites
 {
     public class Configuration
     {
-        public IEnumerable<string> RequiredCommandsForNewUser { get; set; }
+        public ObjectId Id { get; set; }
+        public IEnumerable<string> RequiredStartingCommands { get; set; }
     }
 }

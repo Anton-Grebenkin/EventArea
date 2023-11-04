@@ -14,6 +14,9 @@ namespace KudaGo.Application.Data.Entites
     public enum MessageTemplateType
     {
         WelcomeMessage = 0,
-        CitySelection = 1
+        CitySelection = 1,
+        CitySelected = 2,
+        SelectCategories = 3,
+        CategoriesSelected = 4
     }
 }

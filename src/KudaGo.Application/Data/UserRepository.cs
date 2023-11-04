@@ -1,15 +1,16 @@
 ﻿using KudaGo.Application.Data.Entites;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace KudaGo.Application.Data
 {
     public interface IUserRepository
     {
         Task<User> AddUserAsync(User user);
-        Task<IEnumerable<string>> GetRequiredCommandsAsync(long userId);
         Task<User> GetUserAsync(long userId);
         Task<User> UpdateUserAsync(User user);
         Task<bool> UserExistsAsync(long userId);
+        Task<IEnumerable<User>> GetUsersWithAnyCategoryAsync(IEnumerable<string> categories);
 
     }
     public class UserRepository : IUserRepository
@@ -26,18 +27,19 @@ namespace KudaGo.Application.Data
             return user;
         }
 
-        public async Task<IEnumerable<string>> GetRequiredCommandsAsync(long userId)
-        {
-            return (await _db.GetCollection<User>(_collectionName)
-                .Find(p => p.Id == userId)
-                .FirstOrDefaultAsync()).RequiredCommands;
-        }
-
         public async Task<User> GetUserAsync(long userId)
         {
             return await _db.GetCollection<User>(_collectionName)
                 .Find(p => p.Id == userId)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetUsersWithAnyCategoryAsync(IEnumerable<string> categories)
+        {
+            return await _db.GetCollection<User>(_collectionName)
+                .AsQueryable()
+                .Where(u => u.PreferredEventCategories.Any(c => categories.Contains(c)) || !u.PreferredEventCategories.Any())
+                .ToListAsync();
         }
 
         public async Task<User> UpdateUserAsync(User user)
@@ -50,5 +52,6 @@ namespace KudaGo.Application.Data
         {
             return await _db.GetCollection<User>(_collectionName).Find(p => p.Id == userId).AnyAsync();
         }
+
     }
 }

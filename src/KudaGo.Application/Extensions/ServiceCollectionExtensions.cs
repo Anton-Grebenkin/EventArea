@@ -74,17 +74,18 @@ namespace KudaGo.Application.Extensions
             var types = scanAssemblies
                 .SelectMany(o => o.DefinedTypes
                     .Where(x => x.IsClass)
-                    .Where(x => x.GetCustomAttribute<CommandNameAttribute>() != null)
-                    .Where(x => typeof(ICommandHandler).IsAssignableFrom(x))
+                    .Where(x => x.GetCustomAttribute<CommandTypeAttribute>() != null)
+                    .Where(x => x.GetCustomAttribute<NotUsedAttribute>() == null)
+                    .Where(x => typeof(IMessageHandler).IsAssignableFrom(x))
                     .Select(x => x.AsType())
                 );
 
-            var register = new RegisterService<ICommandHandler, string>(types, (a) => a.GetTypeInfo().GetCustomAttribute<CommandNameAttribute>().Name);
-
-            services.AddSingleton<IRegisterService<ICommandHandler, string>>(register);
+            var commandHandlerTypes = new Dictionary<string, Type>();
 
             foreach (var type in types)
             {
+                commandHandlerTypes.Add(type.GetCustomAttribute<CommandTypeAttribute>().CommandType.GetCommandString(), type);
+
                 services.TryAdd(new ServiceDescriptor(
                     type,
                     type,
@@ -92,6 +93,9 @@ namespace KudaGo.Application.Extensions
                 );
             }
 
+            var register = new CommandHandlersRegisterService(commandHandlerTypes);
+
+            services.AddSingleton<IRegisterService<string, IMessageHandler>>(register);
 
             return services;
         }
@@ -109,16 +113,16 @@ namespace KudaGo.Application.Extensions
                 .SelectMany(o => o.DefinedTypes
                     .Where(x => x.IsClass)
                     .Where(x => x.GetCustomAttribute<CallbackTypeAttribute>() != null)
-                    .Where(x => typeof(ICallbackHandler).IsAssignableFrom(x))
+                    .Where(x => typeof(IMessageHandler).IsAssignableFrom(x))
                     .Select(x => x.AsType())
                 );
 
-            var register = new RegisterService<ICallbackHandler, CallbackType>(types, (a) => a.GetTypeInfo().GetCustomAttribute<CallbackTypeAttribute>().CallbackType);
-
-            services.AddSingleton<IRegisterService<ICallbackHandler, CallbackType>>(register);
+            var callbackHandlerTypes = new Dictionary<CallbackType, Type>();
 
             foreach (var type in types)
             {
+                callbackHandlerTypes.Add(type.GetCustomAttribute<CallbackTypeAttribute>().CallbackType, type);
+
                 services.TryAdd(new ServiceDescriptor(
                     type,
                     type,
@@ -126,6 +130,9 @@ namespace KudaGo.Application.Extensions
                 );
             }
 
+            var register = new CallbackHandlersRegisterService(callbackHandlerTypes);
+
+            services.AddSingleton<IRegisterService<CallbackType, IMessageHandler>>(register);
 
             return services;
         }

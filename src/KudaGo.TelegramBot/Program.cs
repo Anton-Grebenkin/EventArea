@@ -7,6 +7,7 @@ using KudaGo.Application.Services;
 using KudaGo.TelegramBot;
 using KudaGo.TelegramBot.Extensions;
 using KudaGo.TelegramBot.Services;
+using KudaGo.TelegramBot.Workers;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Refit;
@@ -34,6 +35,8 @@ IHost host = Host.CreateDefaultBuilder(args)
                 });
         services.AddScoped<UpdateHandler>();
         services.AddScoped<ReceiverService>();
+        services.AddSingleton<IUpdateEventsService, UpdateEventsService>();
+        services.AddSingleton<IEventRecommendationService, EventRecommendationService>();
         services.AddHostedService<PollingService>();
 
         services
@@ -46,10 +49,15 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IMessageTemplateRepository, MessageTemplateRepository>();
         services.AddScoped<IMessageProvider, MessageProvider>();
+        services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
         services.AddScoped<IRedirectService, RedirectService>();
+        services.AddScoped<IEventRepository, EventRepository>();
 
         services.AddCommandHandlers();
         services.AddCallbackHandlers();
+
+        services.AddHostedService<UpdateEventsWorker>();
+        services.AddHostedService<EventRecomendationWorker>();
     })
     .Build();
 

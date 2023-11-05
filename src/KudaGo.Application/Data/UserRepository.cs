@@ -10,7 +10,7 @@ namespace KudaGo.Application.Data
         Task<User> GetUserAsync(long userId);
         Task<User> UpdateUserAsync(User user);
         Task<bool> UserExistsAsync(long userId);
-        Task<IEnumerable<User>> GetUsersWithAnyCategoryAsync(IEnumerable<string> categories);
+        Task<IEnumerable<User>> GetUsersForEventReccomendation(IEnumerable<string> categories);
 
     }
     public class UserRepository : IUserRepository
@@ -34,11 +34,11 @@ namespace KudaGo.Application.Data
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<User>> GetUsersWithAnyCategoryAsync(IEnumerable<string> categories)
+        public async Task<IEnumerable<User>> GetUsersForEventReccomendation(IEnumerable<string> categories)
         {
             return await _db.GetCollection<User>(_collectionName)
                 .AsQueryable()
-                .Where(u => u.PreferredEventCategories.Any(c => categories.Contains(c)) || !u.PreferredEventCategories.Any())
+                .Where(u => u.PreferredEventCategories.Any(c => categories.Contains(c)) || !u.PreferredEventCategories.Any() && u.RecommendEvents)
                 .ToListAsync();
         }
 

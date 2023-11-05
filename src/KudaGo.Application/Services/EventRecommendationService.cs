@@ -34,7 +34,7 @@ namespace KudaGo.Application.Services
             foreach(var e in events)
             {
                 var message = await _messageProvider.EventReccomendationMessageAsync(e);
-                var users = await _userRepository.GetUsersWithAnyCategoryAsync(e.Categories);
+                var users = await _userRepository.GetUsersForEventReccomendation(e.Categories);
                 foreach (var user in users)
                 {
                     await _botClient.SendMediaGroupAsync(user.Id, message);

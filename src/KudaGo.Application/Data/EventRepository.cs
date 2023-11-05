@@ -49,6 +49,7 @@ namespace KudaGo.Application.Data
 
         public async Task AddEventAsync(Event @event)
         {
+            @event.AddDate = DateTime.UtcNow;
             await _db.GetCollection<Event>(_collectionName).InsertOneAsync(@event);
             return;
         }

@@ -17,10 +17,3 @@ services:
     volumes:
       - ./mongodb_data:/data/db
       - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
-  mongo-express:
-    image: mongo-express:latest
-    restart: always
-    environment:
-      - ME_CONFIG_MONGODB_URL="mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@localhost:27017/"
-    ports:
-      - "8081:8081"

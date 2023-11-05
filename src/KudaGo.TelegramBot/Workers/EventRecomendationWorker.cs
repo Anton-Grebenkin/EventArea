@@ -19,7 +19,7 @@ namespace KudaGo.TelegramBot.Workers
                 try
                 {
                     await _eventRecommendationService.RecommendEventsAsync();
-                    await Task.Delay(5000, stoppingToken);
+                    await Task.Delay(3600000, stoppingToken);
                 }
                 catch (Exception ex)
                 {

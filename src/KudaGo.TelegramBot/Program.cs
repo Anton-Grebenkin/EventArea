@@ -15,8 +15,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.Configure<MongoConfiguration>(
             config.GetSection(nameof(MongoConfiguration)));
 
-        services.Configure<MongoConfiguration>(
-           config.GetSection(nameof(MongoConfiguration)));
+        services.Configure<KudaGoConfiguration>(
+           config.GetSection(nameof(KudaGoConfiguration)));
 
         services.AddHttpClient("telegram_bot_client")
                 .AddTypedClient<ITelegramBotClient>((httpClient, provider) =>

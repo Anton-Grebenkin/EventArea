@@ -1,18 +1,7 @@
-using KudaGo.Application.Abstractions;
-using KudaGo.Application.ApiClient;
-using KudaGo.Application.Data;
-using KudaGo.Application.Extensions;
-using KudaGo.Application.Messages;
-using KudaGo.Application.Services;
-using KudaGo.TelegramBot;
-using KudaGo.TelegramBot.Extensions;
+using KudaGo.Application.Common.Configuration;
+using KudaGo.Application.Common.Extensions;
 using KudaGo.TelegramBot.Services;
 using KudaGo.TelegramBot.Workers;
-using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
-using Refit;
-using System;
-using System.Reflection;
 using Telegram.Bot;
 
 IHost host = Host.CreateDefaultBuilder(args)
@@ -21,10 +10,13 @@ IHost host = Host.CreateDefaultBuilder(args)
         var config = context.Configuration;
 
         services.Configure<BotConfiguration>(
-            config.GetSection(BotConfiguration.Configuration));
+            config.GetSection(nameof(BotConfiguration)));
 
         services.Configure<MongoConfiguration>(
-            config.GetSection("MongoConfiguration"));
+            config.GetSection(nameof(MongoConfiguration)));
+
+        services.Configure<MongoConfiguration>(
+           config.GetSection(nameof(MongoConfiguration)));
 
         services.AddHttpClient("telegram_bot_client")
                 .AddTypedClient<ITelegramBotClient>((httpClient, provider) =>
@@ -33,31 +25,17 @@ IHost host = Host.CreateDefaultBuilder(args)
                     TelegramBotClientOptions options = new(botConfig.BotToken);
                     return new TelegramBotClient(options, httpClient);
                 });
+
         services.AddScoped<UpdateHandler>();
         services.AddScoped<ReceiverService>();
-        services.AddSingleton<IUpdateEventsService, UpdateEventsService>();
-        services.AddSingleton<IEventRecommendationService, EventRecommendationService>();
         services.AddHostedService<PollingService>();
 
-        services
-            .AddRefitClient<IKudaGoApiClient>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://kudago.com/public-api/v1.4"));
-
-        var connectionString = services.BuildServiceProvider().GetConfiguration<MongoConfiguration>().ConnectionString;
-
-        services.AddSingleton(new MongoClient(connectionString).GetDatabase("kudago"));
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IMessageTemplateRepository, MessageTemplateRepository>();
-        services.AddScoped<IMessageProvider, MessageProvider>();
-        services.AddScoped<IConfigurationRepository, ConfigurationRepository>();
-        services.AddScoped<IRedirectService, RedirectService>();
-        services.AddScoped<IEventRepository, EventRepository>();
-
-        services.AddCommandHandlers();
-        services.AddCallbackHandlers();
+        services.AddMemoryCache();
 
         services.AddHostedService<UpdateEventsWorker>();
         services.AddHostedService<EventRecomendationWorker>();
+
+        services.AddApplication();
     })
     .Build();
 

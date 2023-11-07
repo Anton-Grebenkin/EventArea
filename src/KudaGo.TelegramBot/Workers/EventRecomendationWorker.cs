@@ -1,5 +1,5 @@
 ﻿
-using KudaGo.Application.Services;
+using KudaGo.Application.Features.EventsRecommendation;
 
 namespace KudaGo.TelegramBot.Workers
 {
@@ -19,7 +19,7 @@ namespace KudaGo.TelegramBot.Workers
                 try
                 {
                     await _eventRecommendationService.RecommendEventsAsync();
-                    await Task.Delay(3600000, stoppingToken);
+                    await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
                 }
                 catch (Exception ex)
                 {

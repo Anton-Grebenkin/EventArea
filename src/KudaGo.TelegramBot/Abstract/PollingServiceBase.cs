@@ -29,28 +29,17 @@ public abstract class PollingServiceBase<TReceiverService> : BackgroundService
 
     private async Task DoWork(CancellationToken stoppingToken)
     {
-        // Make sure we receive updates until Cancellation Requested,
-        // no matter what errors our ReceiveAsync get
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
-                // Create new IServiceScope on each iteration.
-                // This way we can leverage benefits of Scoped TReceiverService
-                // and typed HttpClient - we'll grab "fresh" instance each time
-                using var scope = _serviceProvider.CreateScope();
-                var receiver = scope.ServiceProvider.GetRequiredService<TReceiverService>();
-
+                var receiver = _serviceProvider.GetRequiredService<TReceiverService>();
                 await receiver.ReceiveAsync(stoppingToken);
             }
-            // Update Handler only captures exception inside update polling loop
-            // We'll catch all other exceptions here
-            // see: https://github.com/TelegramBots/Telegram.Bot/issues/1106
             catch (Exception ex)
             {
                 _logger.LogError("Polling failed with exception: {Exception}", ex);
 
-                // Cooldown if something goes wrong
                 await Task.Delay(TimeSpan.FromSeconds(5), stoppingToken);
             }
         }

@@ -1,23 +1,19 @@
 ﻿using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
-using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types;
 using Telegram.Bot;
-using KudaGo.Application.Abstractions;
-using KudaGo.Application.Messages;
-using KudaGo.Application;
+using KudaGo.Application.Common.Abstractions;
+using KudaGo.Application.Common.Messages;
 
 namespace KudaGo.TelegramBot.Services
 {
     public class UpdateHandler : IUpdateHandler
     {
-        private readonly ITelegramBotClient _botClient;
         private readonly ILogger<UpdateHandler> _logger;
         private readonly IServiceProvider _serviceProvider;
 
-        public UpdateHandler(ITelegramBotClient botClient, ILogger<UpdateHandler> logger, IServiceProvider serviceProvider)
+        public UpdateHandler(ILogger<UpdateHandler> logger, IServiceProvider serviceProvider)
         {
-            _botClient = botClient;
             _logger = logger;
             _serviceProvider = serviceProvider;
         }
@@ -31,22 +27,33 @@ namespace KudaGo.TelegramBot.Services
                 _ => UnknownUpdateHandlerAsync(update, cancellationToken)
             };
 
-            await handler;
+            Task.Factory.StartNew(async () => await handler, cancellationToken);
         }
 
         private async Task BotOnMessageReceived(Message message, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Receive message type: {MessageType}", message.Type);
-            if (message.Text is not { } messageText)
+
+            if (string.IsNullOrEmpty(message.Text))
                 return;
 
-            var type = _serviceProvider.GetService<IRegisterService<string, IMessageHandler>>()
+            using var scope = _serviceProvider.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+
+            var type = serviceProvider.GetRequiredService<IRegisterService<string, IMessageHandler>>()
                 .Tpes
-                .Where(p => p.Key == messageText.Split(' ')[0])
+                .Where(p => p.Key == message.Text.Split(' ')[0])
                 .FirstOrDefault()
                 .Value;
 
-            var handler = (IMessageHandler)_serviceProvider.GetService(type);
+            if (type == null) 
+            {
+                var botClient = serviceProvider.GetRequiredService<ITelegramBotClient>();
+                await botClient.DeleteMessageAsync(message.Chat.Id, message.MessageId);
+                return;
+            }
+
+            var handler = (IMessageHandler)serviceProvider.GetRequiredService(type);
 
             var context = new MessageContext
             {
@@ -56,54 +63,32 @@ namespace KudaGo.TelegramBot.Services
             };
 
             await handler.HandleAsync(context, cancellationToken);
-
-            //static async Task<Message> SendReplyKeyboard(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
-            //{
-            //    ReplyKeyboardMarkup replyKeyboardMarkup = new(
-            //        new[]
-            //        {
-            //            new KeyboardButton[] { "1.1", "1.2" },
-            //            new KeyboardButton[] { "2.1", "2.2" },
-            //        })
-            //    {
-            //        ResizeKeyboard = true
-            //    };
-
-            //    return await botClient.SendTextMessageAsync(
-            //        chatId: message.Chat.Id,
-            //        text: "Choose",
-            //        replyMarkup: replyKeyboardMarkup,
-            //        cancellationToken: cancellationToken);
-            //}
-
-            //static async Task<Message> RemoveKeyboard(ITelegramBotClient botClient, Message message, CancellationToken cancellationToken)
-            //{
-            //    return await botClient.SendTextMessageAsync(
-            //        chatId: message.Chat.Id,
-            //        text: "Removing keyboard",
-            //        replyMarkup: new ReplyKeyboardRemove(),
-            //        cancellationToken: cancellationToken);
-            //}
         }
 
-        // Process Inline Keyboard callback data
         private async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Received inline keyboard callback from: {CallbackQueryId}", callbackQuery.Id);
 
-            await _botClient.AnswerCallbackQueryAsync(
+            using var scope = _serviceProvider.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+
+            var botClient = serviceProvider.GetRequiredService<ITelegramBotClient>();
+
+            await botClient.AnswerCallbackQueryAsync(
                 callbackQueryId: callbackQuery.Id,
                 cancellationToken: cancellationToken);
 
             var callbackData = CallbackData.FromJsonString(callbackQuery.Data);
 
-            var type = _serviceProvider.GetService<IRegisterService<CallbackType, IMessageHandler>>()
+            var type = serviceProvider.GetRequiredService<IRegisterService<CallbackType, IMessageHandler>>()
                 .Tpes
                 .Where(p => p.Key == callbackData.CallbackType)
                 .FirstOrDefault()
                 .Value;
 
-            var handler = (IMessageHandler)_serviceProvider.GetService(type);
+            if (type == null) return;
+
+            var handler = (IMessageHandler)serviceProvider.GetRequiredService(type);
 
             var context = new MessageContext
             {

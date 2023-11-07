@@ -400,3 +400,6 @@ FodyWeavers.xsd
 mongodb_data
 /.env
 /docker-compose.yml
+/src/KudaGo.TelegramBot/appsettings.json
+/docker-compose.yml
+/docker-compose.yml

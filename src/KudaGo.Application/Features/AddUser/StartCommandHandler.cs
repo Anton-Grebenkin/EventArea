@@ -6,7 +6,7 @@ using KudaGo.Application.Common.ApiClient;
 using KudaGo.Application.Common.Data;
 using KudaGo.Application.Common.Extensions;
 
-namespace KudaGo.Application.Features.Start
+namespace KudaGo.Application.Features.AddUser
 {
     [CommandType(CommandType.Start)]
     public class StartCommandHandler : IMessageHandler
@@ -63,7 +63,8 @@ namespace KudaGo.Application.Features.Start
             {
                 Id = updateContext.ChatId,
                 UserName = updateContext.User.Username,
-                City = "msk"
+                City = "msk",
+                RecommendEvents = true
             },
             ct);
 

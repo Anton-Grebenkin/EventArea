@@ -12,8 +12,8 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
-        
+        uses: 
+            actions/checkout@v2        
       - name: Fill out appsettings.json
         uses: danielr1996/envsubst-action@1.0.0
         env:
@@ -25,7 +25,6 @@ jobs:
         with:
             input: src/KudaGo.TelegramBot/appsettings.template.json
             output: src/KudaGo.TelegramBot/appsettings.json
-
       - name: Fill out docker-compose.yml
         uses: danielr1996/envsubst-action@1.0.0
         env:
@@ -35,7 +34,6 @@ jobs:
         with:
             input: docker-compose.template.yml
             output: docker-compose.yml
-
       - name: Copy docker-compose.yml to remote
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -43,8 +41,7 @@ jobs:
           remote: kudago/docker-compose.yml
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
-          privateKey: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
-          
+          privateKey: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}          
       - name: Copy init-mongo.js to remote
         uses: garygrossgarten/github-action-scp@release
         with:
@@ -53,10 +50,8 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USERNAME }}
           privateKey: ${{ secrets.SERVER_SSH_PRIVATE_KEY }}
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
-
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -74,3 +69,16 @@ jobs:
           file: ./src/KudaGo.TelegramBot/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/kudagotelegrambot:latest, ${{ secrets.DOCKER_USERNAME }}/kudagotelegrambot:${{ github.run_number }}
+
+      - name: SSH into server and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_SSH_PRIVATE_KEY }} 
+          script: |
+            cd kudago
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
+            docker image prune

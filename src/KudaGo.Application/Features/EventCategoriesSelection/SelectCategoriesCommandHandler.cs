@@ -123,11 +123,10 @@ namespace KudaGo.Application.Features.EventCategoriesSelection
             var callbackData = SelectCategoriesButtonInfo.FromString(updateContext.CallbackData.Data);
             if (callbackData.Action == SelectCategoriesButtonAction.Complete)
             {
-                var completeMessageData = await _messageProvider.CompleteSelectCategoriesMessageAsync(cancellationToken);
-                await _botClient.EditMessageAsync(updateContext.ChatId, updateContext.MessageId, completeMessageData, cancellationToken);
+                await CompleteSelectCategoriesCase(updateContext, cancellationToken);
                 return;
             }
-
+            
             var user = await _userRepository.GetUserAsync(updateContext.ChatId, cancellationToken);
 
             var categories = await _kudaGoApiClient.GetEventCategoriesAsync(cancellationToken);
@@ -181,5 +180,12 @@ namespace KudaGo.Application.Features.EventCategoriesSelection
 
             await _botClient.EditMessageAsync(updateContext.ChatId, updateContext.MessageId, messageData, cancellationToken);
         }
+
+        private async Task CompleteSelectCategoriesCase(MessageContext updateContext, CancellationToken cancellationToken)
+        {
+            var completeMessageData = await _messageProvider.CompleteSelectCategoriesMessageAsync(cancellationToken);
+            await _botClient.EditMessageAsync(updateContext.ChatId, updateContext.MessageId, completeMessageData, cancellationToken);
+        }
+
     }
 }

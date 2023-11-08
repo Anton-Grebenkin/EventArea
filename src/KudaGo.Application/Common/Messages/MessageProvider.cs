@@ -99,11 +99,38 @@ namespace KudaGo.Application.Common.Messages
             CallbackType callbackType,
             CancellationToken cancellationToken = default)
         {
+
+            var buttons = GetCategoriesList(categories, currentPage, callbackType);
+
+            var navigation = GetCategoriesNavigation(currentPage, nextPage, previosPage, callbackType);
+
+            buttons.Add(navigation);
+
+            var complete = GetCategoriesCompleteButton(currentPage, callbackType);
+
+            buttons.Add(complete);
+
+            InlineKeyboardMarkup inlineKeyboard = new(buttons);
+
+            var messageTemplate = await _messageTemplateRepository.GetMessageTemplateAsync(MessageTemplateType.SelectCategories, cancellationToken);
+
+            return new MessageData(messageTemplate.Text, inlineKeyboard);
+        }
+
+        public async Task<MessageData> WelcomeMessageAsync(CancellationToken cancellationToken = default)
+        {
+            var massegeTemplate = await _messageTemplateRepository.GetMessageTemplateAsync(MessageTemplateType.WelcomeMessage, cancellationToken);
+
+            return new MessageData(massegeTemplate.Text);
+        }
+
+        private List<List<InlineKeyboardButton>> GetCategoriesList(IEnumerable<ItemSelection<EventCategory>> categories, int currentPage, CallbackType callbackType)
+        {
             var buttons = new List<List<InlineKeyboardButton>>();
 
             foreach (var c in categories)
             {
-                var buttonInfo = new SelectCategoriesButtonInfo 
+                var buttonInfo = new SelectCategoriesButtonInfo
                 {
                     Slug = c.Value.Slug,
                     Action = SelectCategoriesButtonAction.SelectItem,
@@ -123,6 +150,10 @@ namespace KudaGo.Application.Common.Messages
                 });
             }
 
+            return buttons;
+        }
+        private List<InlineKeyboardButton> GetCategoriesNavigation(int currentPage, bool nextPage, bool previosPage, CallbackType callbackType)
+        {
             var navigation = new List<InlineKeyboardButton>();
 
             if (previosPage)
@@ -157,8 +188,10 @@ namespace KudaGo.Application.Common.Messages
                 navigation.Add(InlineKeyboardButton.WithCallbackData($"Вперед {Emoji.Next}", nextPageCallbackData.ToJsonString()));
             }
 
-            buttons.Add(navigation);
-
+            return navigation;
+        }
+        private List<InlineKeyboardButton> GetCategoriesCompleteButton(int currentPage, CallbackType callbackType)
+        {
             var completeButtonInfo = new SelectCategoriesButtonInfo
             {
                 Slug = null,
@@ -176,20 +209,7 @@ namespace KudaGo.Application.Common.Messages
                 InlineKeyboardButton.WithCallbackData($"Подтвердить", completeCallbackData.ToJsonString())
             };
 
-            buttons.Add(complete);
-
-            InlineKeyboardMarkup inlineKeyboard = new(buttons);
-
-            var messageTemplate = await _messageTemplateRepository.GetMessageTemplateAsync(MessageTemplateType.SelectCategories, cancellationToken);
-
-            return new MessageData(messageTemplate.Text, inlineKeyboard);
-        }
-
-        public async Task<MessageData> WelcomeMessageAsync(CancellationToken cancellationToken = default)
-        {
-            var massegeTemplate = await _messageTemplateRepository.GetMessageTemplateAsync(MessageTemplateType.WelcomeMessage, cancellationToken);
-
-            return new MessageData(massegeTemplate.Text);
+            return complete;
         }
     }
 }

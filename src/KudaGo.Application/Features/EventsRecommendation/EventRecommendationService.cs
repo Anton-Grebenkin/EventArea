@@ -1,6 +1,7 @@
 ﻿using KudaGo.Application.Common.Abstractions;
 using KudaGo.Application.Common.Data;
 using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 
 namespace KudaGo.Application.Features.EventsRecommendation
 {
@@ -35,7 +36,18 @@ namespace KudaGo.Application.Features.EventsRecommendation
                 var users = await _userRepository.GetUsersForEventReccomendation(e.Categories);
                 foreach (var user in users)
                 {
-                    await _botClient.SendMediaGroupAsync(user.Id, message);
+                    try
+                    {
+                        await _botClient.SendMediaGroupAsync(user.Id, message);
+                    }
+                    catch (ApiRequestException ex)
+                    {
+                        if (ex.ErrorCode == 403)
+                        {
+                            user.RecommendEvents = false;
+                            await _userRepository.UpdateUserAsync(user);
+                        }
+                    }
                 }
 
                 e.Recommended = true;

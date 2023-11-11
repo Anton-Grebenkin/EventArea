@@ -48,6 +48,13 @@ namespace KudaGo.Application.Features.AddUser
 
         private async Task CaseUserExists(MessageContext updateContext, CancellationToken ct)
         {
+            var user = await _userRepository.GetUserAsync(updateContext.ChatId, ct);
+            if (!user.RecommendEvents)
+            {
+                user.RecommendEvents = true;
+                await _userRepository.UpdateUserAsync(user);
+            }
+
             var messageData = await _messageProvider.WelcomeMessageAsync(ct);
 
             await _botClient.SendMessageAsync(updateContext.ChatId, messageData, ct);

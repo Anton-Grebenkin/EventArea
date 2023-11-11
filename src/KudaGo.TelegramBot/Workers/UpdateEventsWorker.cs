@@ -18,12 +18,14 @@ namespace KudaGo.TelegramBot.Workers
                 try
                 {
                     await _updateEventsService.UpdateEvents();
-
-                    await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
                 }
                 catch (Exception ex) 
                 {
                     _logger.LogError(ex.Message);
+                }
+                finally 
+                {
+                    await Task.Delay(TimeSpan.FromMinutes(5), stoppingToken);
                 }
             }
         }

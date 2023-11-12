@@ -169,7 +169,7 @@ namespace KudaGo.Application.Common.Messages
                     Data = previosPageButtonInfo.ToString(),
                     CallbackType = callbackType
                 };
-                navigation.Add(InlineKeyboardButton.WithCallbackData($"{Emoji.Previos} Назад", previosCallbackData.ToJsonString()));
+                navigation.Add(InlineKeyboardButton.WithCallbackData($"{Emoji.Previos}", previosCallbackData.ToJsonString()));
             }
 
             if (nextPage)
@@ -185,7 +185,7 @@ namespace KudaGo.Application.Common.Messages
                     Data = nextPageButtonInfo.ToString(),
                     CallbackType = callbackType
                 };
-                navigation.Add(InlineKeyboardButton.WithCallbackData($"Вперед {Emoji.Next}", nextPageCallbackData.ToJsonString()));
+                navigation.Add(InlineKeyboardButton.WithCallbackData($"{Emoji.Next}", nextPageCallbackData.ToJsonString()));
             }
 
             return navigation;

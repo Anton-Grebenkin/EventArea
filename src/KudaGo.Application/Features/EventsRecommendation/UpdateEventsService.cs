@@ -22,31 +22,24 @@ namespace KudaGo.Application.Features.EventsRecommendation
         public async Task UpdateEvents()
         {
 
-            var maxId = await _eventRepository.GetMaxEventId();
+            //var maxId = await _eventRepository.GetMaxEventId();
 
             var since = new DateTimeOffset(DateTime.UtcNow).ToUnixTimeSeconds();
             var page = 1;
             var pageSize = 100;
             var eventsResult = await _kudaGoApiClient.GetEventsAsync(since, "msk", page: page, pageSize: pageSize);
 
-            while (eventsResult.Results.Any(e => e.Id > maxId))
+            while (page * pageSize < eventsResult.Count)
             {
-                var eventsForSave = eventsResult.Results.Where(e => e.Id > maxId);
-                foreach (var e in eventsForSave)
+                foreach (var e in eventsResult.Results)
                 {
-                    await _eventRepository.AddEventAsync(MapEvent(e));
+                    var eventExists = await _eventRepository.EventExistsAsync(e.Id);
+                    if (!eventExists)
+                        await _eventRepository.AddEventAsync(MapEvent(e));
                 }
 
-                if (page * pageSize < eventsResult.Count)
-                {
-                    page++;
-                    eventsResult = await _kudaGoApiClient.GetEventsAsync(since, "msk", page: page);
-                }
-                else
-                {
-                    break;
-                }
-
+                page++;
+                eventsResult = await _kudaGoApiClient.GetEventsAsync(since, "msk", page: page);
             }
 
         }

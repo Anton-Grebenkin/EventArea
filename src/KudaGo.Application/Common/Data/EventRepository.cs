@@ -1,6 +1,7 @@
 ﻿using KudaGo.Application.Common.Data.Entites;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using System.Threading;
 
 
 namespace KudaGo.Application.Common.Data
@@ -8,6 +9,7 @@ namespace KudaGo.Application.Common.Data
     public interface IEventRepository
     {
         Task<Event> GetEventAsync(long id, CancellationToken cancellationToken = default);
+        Task<bool> EventExistsAsync(long id, CancellationToken cancellationToken = default);
         Task AddEventAsync(Event @event, CancellationToken cancellationToken = default);
         Task<long> GetMaxEventId(CancellationToken cancellationToken = default);
         Task<IEnumerable<Event>> GetNotRecommendedAsync(CancellationToken cancellationToken = default);
@@ -64,6 +66,13 @@ namespace KudaGo.Application.Common.Data
                .ToListAsync(cancellationToken);
 
             return events;         
+        }
+
+        public async Task<bool> EventExistsAsync(long id, CancellationToken cancellationToken = default)
+        {
+            return await _db.GetCollection<Event>(_collectionName)
+                 .AsQueryable()
+                 .AnyAsync(e => e.Id == id, cancellationToken);
         }
     }
 }

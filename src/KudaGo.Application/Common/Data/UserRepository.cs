@@ -38,7 +38,7 @@ namespace KudaGo.Application.Common.Data
         {
             return await _db.GetCollection<User>(_collectionName)
                 .AsQueryable()
-                .Where(u => u.PreferredEventCategories.Any(c => (categories.Contains(c)) || !u.PreferredEventCategories.Any()) && u.RecommendEvents)
+                .Where(u => (u.PreferredEventCategories.Any(c => categories.Contains(c)) || !u.PreferredEventCategories.Any()) && u.RecommendEvents)
                 .ToListAsync(cancellationToken);
         }
 

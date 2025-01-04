@@ -3,8 +3,10 @@ using KudaGo.Application.Common.Extensions;
 using KudaGo.TelegramBot.Services;
 using KudaGo.TelegramBot.Workers;
 using Telegram.Bot;
+using Serilog;
 
 IHost host = Host.CreateDefaultBuilder(args)
+    .UseSerilog()
     .ConfigureServices((context, services) =>
     {
         var config = context.Configuration;
